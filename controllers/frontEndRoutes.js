@@ -102,6 +102,10 @@ router.post('/comment',(req,res)=> {
         comment_body: req.body.comment_body,
         UserId: req.session.user.id,
         PostId: req.body.PostId
+    }).then(newComment=> {
+        res.redirect('/')
+    }).catch(err=>{
+        console.log(err)
     })
 })
 
