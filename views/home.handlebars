@@ -1,0 +1,14 @@
+<h1>Let's Talk about Tech!</h1>
+
+{{#each posts}}
+<div class="blog-post" id="post-{{id}}">
+    <h2>{{title}}</h2>
+    <p>{{post_body}}</p>
+    <h4>Posted by {{User.first_name}} {{User.last_name}} at {{createdAt}}</h4>
+</div>
+{{#if loggedIn}}
+<textarea class="comment-area" id="comment-{{id}}"></textarea>
+<button class="commentBtn" id="{{id}}">Add your comment</button>
+{{/if}}
+{{/each}}
+<script src="./scripts/main.js"></script>

@@ -8,22 +8,30 @@ const seed = async ()=>{
             {
                 username:"joe",
                 password:"password",
-                email:"joe@joe.joe"
+                email:"joe@joe.joe",
+                first_name: "Joe",
+                last_name: "Rehfuss"
             },
             {
                 username:"louis",
                 password:"password",
-                email:"louis@joe.joe"
+                email:"louis@joe.joe",
+                first_name: "Louis",
+                last_name: "Coleman"
             },
             {
                 username:"brett",
                 password:"password",
-                email:"brett@joe.joe"
+                email:"brett@joe.joe",
+                first_name: "Brett",
+                last_name: "Belka"
             },
             {
                 username:"michael",
                 password:"password",
-                email:"michael@joe.joe"
+                email:"michael@joe.joe",
+                first_name: "Michael",
+                last_name: "Corleone"
             },
         ],{
             individualHooks:true

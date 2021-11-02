@@ -1,10 +1,29 @@
 const express = require('express');
 const User = require('../models/User');
 const router = express.Router();
-const bcrypt = require("bcrypt")
+const bcrypt = require("bcrypt");
+const {Post} = require('../models');
+const {Comment} = require('../models');
 
 router.get('/',(req,res)=> {
-    res.render("home")
+    Post.findAll({
+        order:["createdAt"],
+        limit:10,
+        include:[User]
+    }).then((postData)=> {
+        const hbsData = postData.map(post=>post.get({plain:true}))
+        if(req.session.user){
+            for (const obj of hbsData) {
+            obj.loggedIn=true
+        }
+        }
+        res.render("home",{
+            posts:hbsData
+        })
+    }).catch(err=>{
+        console.log(err)
+        res.json(err)
+    })
 })
 
 router.get('/login',(req,res)=> {
@@ -23,10 +42,11 @@ router.post('/login',(req,res)=> {
     } else {
         if(bcrypt.compareSync(req.body.password,foundUser.password)){
             req.session.user = {
+                id:foundUser.id,
                 username:foundUser.username,
                 email:foundUser.email,
                 first_name: foundUser.first_name,
-                last: foundUser.last,
+                last_name: foundUser.last_name,
             }
             res.json(foundUser)
         } else {
@@ -49,11 +69,13 @@ router.post('/signup',(req,res)=>{
         password : req.body.password
     }).then(newuser=>{
         req.session.user = {
-        username : req.body.username,
-        email : req.body.email,
-        first_name : req.body.fname,
-        last_name : req.body.lname,
+            id: newuser.id,
+            username:newuser.username,
+            email:newuser.email,
+            first_name: newuser.first_name,
+            last_name: newuser.last_name,
         }
+        
         res.json(newuser)
     }).catch(err=>{
         console.log(err);
@@ -66,7 +88,8 @@ router.get('/signup',(req,res)=> {
 })
 
 router.get('/logout',(req,res)=> {
-    res.render("logout")
+    req.session.destroy()
+    res.render("login")
 })
 
 router.get('/dashboard',(req,res)=> {
@@ -74,7 +97,13 @@ router.get('/dashboard',(req,res)=> {
 })
 
 
-
+router.post('/comment',(req,res)=> {
+    Comment.create({
+        comment_body: req.body.comment_body,
+        UserId: req.session.user.id,
+        PostId: req.body.PostId
+    })
+})
 
 
 module.exports = router;
